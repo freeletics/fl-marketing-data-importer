@@ -1,7 +1,9 @@
 FROM python:3
 
-ADD markting_data_importer.py /
+ADD *.py /
 
-# RUN pip install pystrich
+ADD requirements.txt /
+
+RUN pip3 install -r requirements.txt
 
 CMD [ "python", "./markting_data_importer.py" ]

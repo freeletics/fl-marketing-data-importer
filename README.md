@@ -2,6 +2,15 @@
 
 In this repo, we will develop a cron job that will be sceduled to import the marketing data from `facebook` and `apple`.
 
+#Development
+Developers are advised to enable virtual environment and install the dependeces using `requirements.txt`:
+```shell script
+virtualenv venv
+python3 -m venv venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+```
+
 We will use AWS `ECS` and `fargate` to secdule the job based on cloudwatch events. to be able to develop the job, we need to do the following steps:
 
 ```
@@ -36,5 +45,21 @@ docker tag fl-marketing-data-importer:latest 778443482073.dkr.ecr.eu-central-1.a
 ```
 docker push 778443482073.dkr.ecr.eu-central-1.amazonaws.com/fl-marketing-data-importer:latest
 ```
+## ECS task difintion:
+In this step, we will create an `ecs` task difinition:
 
 
+```
+# create a task difinition
+aws ecs register-task-definition --cli-input-json file:fargate-task.json --region eu-central-1
+
+# to list task difintions
+aws ecs list-task-definitions --region eu-central-1
+
+```
+
+## Create ECS service
+```
+aws ecs create-service --service-name marketing-fargate-service --task-definition marketing-importer:1 --desired-count 1 --launch-type "FARGATE" --network-configuration "awsvpcConfiguration={subnets=[subnet-abcd1234],securityGroups=[sg-abcd1234]}"
+
+```
