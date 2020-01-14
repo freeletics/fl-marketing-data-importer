@@ -45,21 +45,19 @@ docker tag fl-marketing-data-importer:latest 778443482073.dkr.ecr.eu-central-1.a
 ```
 docker push 778443482073.dkr.ecr.eu-central-1.amazonaws.com/fl-marketing-data-importer:latest
 ```
-## ECS task difintion:
-In this step, we will create an `ecs` task difinition:
 
+## create a task difinition
+Use the AWS console to create a task defnition to launch the docker image as shown here:
 
+https://eu-central-1.console.aws.amazon.com/ecs/home?region=eu-central-1#/taskDefinitions
+
+### to list task difintions
+make sure that you have created the task definition by executing the following command:
 ```
-# create a task difinition
-aws ecs register-task-definition --cli-input-json file:fargate-task.json --region eu-central-1
-
-# to list task difintions
 aws ecs list-task-definitions --region eu-central-1
-
 ```
 
-## Create ECS service
-```
-aws ecs create-service --service-name marketing-fargate-service --task-definition marketing-importer:1 --desired-count 1 --launch-type "FARGATE" --network-configuration "awsvpcConfiguration={subnets=[subnet-abcd1234],securityGroups=[sg-abcd1234]}"
+## Create a cloudwatch event 
+In this step, you should create a cloudwatch event to scedule running the task that you have defined before as shown here:
 
-```
+https://eu-central-1.console.aws.amazon.com/cloudwatch/home?region=eu-central-1#rules:name=marketing-api-importer
